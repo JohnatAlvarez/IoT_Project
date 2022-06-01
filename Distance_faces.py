@@ -4,8 +4,14 @@ import cv2
 import time
 import freenect
 import math
-# Cargamos el vídeo
+from six.moves import urllib
+import sys
 
+
+myAPI =  "UJ1KTTAY8AKXGV7P"
+MyDelay = 5
+# Cargamos el vídeo
+baseURL ='https://api.thingspeak.com/update?api_key=UJ1KTTAY8AKXGV7P'
 KNOWN_DISTANCE = 76.2  # centimeter
 # width of face in the real world or Object Plane
 KNOWN_WIDTH = 14.3  # centimeter
@@ -17,8 +23,8 @@ def get_video():
 	return array
 def get_depth():
     	array,_ = freenect.sync_get_depth()
-   	array = array.astype(np.uint8)
-    	return array
+	array = array.astype(np.uint8)
+	return array
 
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 def focal_length(measured_distance, real_width, width_in_rf_image):
@@ -57,10 +63,18 @@ cv2.imshow("ref_image", ref_image)
 while 1:
 	img = get_video()
 	face_width_in_frame = face_data(img)
-	
+	distancia=0
+	Actividad=0
 	if face_width_in_frame != 0:
 		Distance = distance_finder(focal_length_found, KNOWN_WIDTH, face_width_in_frame)
-		print({round(Distance,2)})
+		distancia=round(Distance,2)
+		print(distancia)
+		Actividad=1
+	urllib.request.urlopen(baseURL +"&field1=%s"%str(distancia))	
+	urllib.request.urlopen(baseURL +"&field2=%s"%str(Actividad))	
+		
+
+		
 	cv2.imshow("frame", img)
     	k = cv2.waitKey(30)
     	
