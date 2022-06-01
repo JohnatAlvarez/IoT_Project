@@ -1,0 +1,21 @@
+
+% Channel ID to read data from 
+readChannelID = 1699099; 
+% Temperature Field ID 
+temperatureFieldID = 1; 
+
+% Channel Read API Key 
+% If your channel is private, then enter the read API 
+% Key between the '' below: 
+readAPIKey = ''; 
+
+% Read the latest temperature data from the MathWorks Weather Station. 
+% Learn more about the THINGSPEAKREAD function by going to the Documentation tab on
+% the right side pane of this page. 
+
+Distancia = thingSpeakRead(readChannelID,'Fields',temperatureFieldID,'ReadKey',readAPIKey); 
+
+% Convert to Celsius 
+Dm = (0.1)*(Distancia); 
+display(Dm,'Distancia en Metros'); 
+
